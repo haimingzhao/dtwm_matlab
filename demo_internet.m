@@ -8,7 +8,8 @@
 % the C/MEX version is much faster and highly recommended
 
 
-clear;clc;close all;
+clear;clc;
+close all;
 
 % mex dtw_c.c;
 
@@ -241,4 +242,4 @@ b = [
 ];
 
 % [d1, d2, d3, d4] = testall(a,b);
-[D, L, R, P, OP] = test_dtwm(a, b, 0.2, 5, 10);
+[D, L, R, P, OP] = test_dtwm(a, b, 0.2, 8, 15);

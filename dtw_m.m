@@ -24,21 +24,39 @@ D(1, 1) = 0 ; % make sure the first cell start with 0 distance at D(2,2)
 for i=2:ns
     for j=2:nt
 
-        minpre = min( [D(i,j-1), D(i-1,j), D(i-1,j-1)] ) ;
+%         minpre = min( [D(i,j-1), D(i-1,j), D(i-1,j-1)] ) ;
+%         
+%         if minpre == inf
+%             mini = i-1;
+%             minj = j-1;
+%             minpre = 0;
+%         elseif minpre == D(i,j-1)
+%             mini = i;
+%             minj = j-1;
+%         elseif minpre == D(i-1,j)     
+%             mini = i-1;
+%             minj = j;
+%         else
+%             mini = i-1;
+%             minj = j-1;
+%         end    
+        minpre = min( [C(i,j-1), C(i-1,j), C(i-1,j-1)] ) ;
         
-        if minpre == inf
-            mini = i-1;
-            minj = j-1;
-            minpre = 0;
-        elseif minpre == D(i,j-1)
+        if minpre == C(i,j-1)
             mini = i;
             minj = j-1;
-        elseif minpre == D(i-1,j)     
+        elseif minpre == C(i-1,j)     
             mini = i-1;
             minj = j;
         else
             mini = i-1;
             minj = j-1;
+        end 
+        
+        if D(mini, minj)==inf
+            minpre = 0;
+        else
+            minpre = D(mini, minj);
         end    
         
         dtwm = (minpre + C(i,j)) / (L(mini, minj) + 1) ;
@@ -57,11 +75,12 @@ for i=2:ns
                 if abs((i-si)-(j-sj)) < o
                     
                     R{i, j} = [si,sj, 0,0]; % else same as previous region
-                    P(i, j, 1) = mini; P(i, j, 2) = minj;  % mark path
+                    P(i, j, 1) = mini; 
+                    P(i, j, 2) = minj;  % mark path
                     % update end cell if furthest away
                     li = R{ si, sj }(3);
                     lj = R{ si, sj }(4);
-                    if i > li || j > lj
+                    if i > li && j > lj
                         R{ si, sj }(3) = i;
                         R{ si, sj }(4) = j;
                     end
@@ -72,11 +91,11 @@ for i=2:ns
 end
 
 % find optimal path
-OP = find_Optimal_Paths(R,P, ns, nt, w);
+OP = find_Optimal_Paths(R,P, L, ns, nt, w);
 
 end
 
-function OP = find_Optimal_Paths(R, P, ns, nt, w)
+function OP = find_Optimal_Paths(R, P, L, ns, nt, w)
 
 OP=zeros(ns,nt); % mark all cell as zeros
 visited =zeros(ns,nt);
@@ -87,11 +106,14 @@ for i=2:ns
         if ~ isempty(R{i,j})
             si = R{i,j}(1);
             sj = R{i,j}(2);
-            li = R{si,sj}(3); 
-            lj =  R{si,sj}(4);
-            if visited(si, sj)> 0 && (li+lj-si-sj)/2 > w
-                
-                OP = markpath(OP, P, si, sj, li, lj, mark);
+            
+            if visited(si, sj)== 0
+                li = R{si,sj}(3); 
+                lj = R{si,sj}(4);
+                if  pdist2([li,lj],[si,sj]) > w
+                    OP(li, lj) = mark;
+                    OP = markpath(OP, P, si, sj, li, lj, mark);
+                end    
             end
             visited(si, sj) = 1;
 %             mark = mark + 20;

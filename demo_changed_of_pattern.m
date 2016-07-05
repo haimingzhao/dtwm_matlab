@@ -358,5 +358,5 @@ b = [
 ];
 
 
-test_dtwm(a, b, 0.3, 5, 10);
+[D, L, R, P, OP]= test_dtwm(a(1:160), b(1:160), 0.2, 10, 20);
 % testall(a,b);

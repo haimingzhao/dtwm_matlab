@@ -37,4 +37,4 @@ subplot(4,1,4)
 plot(b, 'blue')
 
 % [d1, d2, d3,d4] = testall(a,b);
-[D, L, R, P, OP] = test_dtwm(a, b, 0.3, 50/4, 100/4);
+[D, L, R, P, OP] = test_dtwm(a, b, 0.3, 30/4, 100/4);
