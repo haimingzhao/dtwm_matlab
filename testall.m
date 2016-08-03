@@ -29,7 +29,8 @@ title('Distance/Cost');
 % ----------------------------
 % d2=swa(a,b,0.001,5);
 % d2=swa_diff(a,b,0.001,5);
-[d2, L, R] = dtw_m(d3, 0.5);
+% [d2, L, R] = dtw_m(d3, 0.5);
+[d2, L, R, P, OP]=dtw_m(d3,0.5, 3, 5);
 
 figure; 
 subplot(5,5,[1,6,11,16]); plot(a); view(270,90)
@@ -45,7 +46,7 @@ title('DTW modified');
 % ----------------------------
 % d2=swa(a,b,0.001,5);
 % d4=crossmatch(a,b, 0.001, 5);
-d4 = distance_m(d3, 1);
+d4 = distance_m(d3, 0.25);
 
 figure; 
 subplot(5,5,[1,6,11,16]); plot(a); view(270,90)
@@ -54,7 +55,7 @@ subplot(5,5,22:25); plot(b);
 subplot(5,5,[2:5, 7:10, 12:15, 17:20 ]);
 % pcolor(flipud(d4));
 imagesc(flipud(d4));
-colorbar();
+% colorbar();
 
 set(gca, 'YDir', 'reverse'); 
 title('distance mark');

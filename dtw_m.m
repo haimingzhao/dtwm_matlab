@@ -40,6 +40,7 @@ for i=2:ns
 %             mini = i-1;
 %             minj = j-1;
 %         end    
+
         minpre = min( [C(i,j-1), C(i-1,j), C(i-1,j-1)] ) ;
         
         if minpre == C(i,j-1)

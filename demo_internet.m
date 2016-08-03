@@ -241,5 +241,5 @@ b = [
 87724228491
 ];
 
-% [d1, d2, d3, d4] = testall(a,b);
+% % [d1, d2, d3, d4] = testall(a,b);
 [D, L, R, P, OP] = test_dtwm(a, b, 0.2, 8, 15);

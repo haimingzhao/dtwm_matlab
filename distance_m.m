@@ -5,7 +5,7 @@ LB=size(C,2);
 
 D=zeros(LA,LB);
 
-mark = 40;
+mark = 200;
 
 imgaussfilt(C, 4)
 

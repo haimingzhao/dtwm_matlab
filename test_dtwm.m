@@ -24,7 +24,7 @@ subplot(5,5,22:25); plot(b);
 
 subplot(5,5,[2:5, 7:10, 12:15, 17:20 ]);
 imagesc(flipud(d2(2:end,2:end)));
-colorbar();
+% colorbar();
 set(gca, 'YDir', 'reverse'); 
 % title('Smith-Waterman Algorithm');
 title('DTW modified');
