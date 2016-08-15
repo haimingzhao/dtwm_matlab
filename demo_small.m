@@ -42,5 +42,5 @@ b = [
 
 % cd('/Users/mira/Dropbox/Project-TimeSeries/dynamic_time_warping_v2.1')
 
-% [d1, d2, d3, d4] = testall(a,b);
-[D, L, R, P, OP] = test_dtwm(a, b, 0.2, 2, 3);
+% [d1, d3, d4] = testall(a,b);
+[D, L, R, P, OP] = test_dtwm(a, b, 0.2, 2, 2);

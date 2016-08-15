@@ -24,29 +24,12 @@ D(1, 1) = 0 ; % make sure the first cell start with 0 distance at D(2,2)
 for i=2:ns
     for j=2:nt
 
-%         minpre = min( [D(i,j-1), D(i-1,j), D(i-1,j-1)] ) ;
-%         
-%         if minpre == inf
-%             mini = i-1;
-%             minj = j-1;
-%             minpre = 0;
-%         elseif minpre == D(i,j-1)
-%             mini = i;
-%             minj = j-1;
-%         elseif minpre == D(i-1,j)     
-%             mini = i-1;
-%             minj = j;
-%         else
-%             mini = i-1;
-%             minj = j-1;
-%         end    
-
-        minpre = min( [C(i,j-1), C(i-1,j), C(i-1,j-1)] ) ;
+        minpre = min( [D(i,j-1), D(i-1,j), D(i-1,j-1)] ) ;
         
-        if minpre == C(i,j-1)
+        if minpre == D(i,j-1)
             mini = i;
             minj = j-1;
-        elseif minpre == C(i-1,j)     
+        elseif minpre == D(i-1,j)     
             mini = i-1;
             minj = j;
         else
@@ -54,12 +37,25 @@ for i=2:ns
             minj = j-1;
         end 
         
+%         minpre = min( [C(i,j-1), C(i-1,j), C(i-1,j-1)] ) ;
+%         
+%         if minpre == C(i,j-1)
+%             mini = i;
+%             minj = j-1;
+%         elseif minpre == C(i-1,j)     
+%             mini = i-1;
+%             minj = j;
+%         else
+%             mini = i-1;
+%             minj = j-1;
+%         end 
+        
         if D(mini, minj)==inf
             minpre = 0;
-        else
-            minpre = D(mini, minj);
+%         else
+%             minpre = D(mini, minj);
         end    
-        
+%         
         dtwm = (minpre + C(i,j)) / (L(mini, minj) + 1) ;
 %         dtwm = C(i,j);
         % avg dtw per cell if smaller than threshold, mark as match region

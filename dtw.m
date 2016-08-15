@@ -26,6 +26,8 @@ end
 %% initialization
 D=zeros(ns,nt); 
 
+D(1,1) = abs(s(1)-t(1));
+
 %% begin dynamic programming
 for i=2:ns
     D(i, 1) = abs(s(i)-t(1)) + D(i-1, 1) ;
