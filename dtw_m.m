@@ -7,8 +7,8 @@ nt=size(C,2);
 
 %% initialization accum matrix with cost matrix
 D=zeros(ns,nt); % accum matrix with dtw
-L=zeros(ns,nt); % dtw length
-R=cell(ns,nt); % region marking  matrix
+L=zeros(ns,nt); % dtw length matrix
+R=cell(ns,nt); % region marking matrix, mark ()
 P=zeros(ns,nt,2); % path
 
 for i=1:ns
@@ -17,44 +17,48 @@ for i=1:ns
     end    
 end        
  
-D(1, 1) = 0 ; % make sure the first cell start with 0 distance at D(2,2)
+% D(1, 1) = 0 ; % make sure the first cell start with 0 distance at D(2,2)
 
 %% begin dynamic programming
 
-for i=2:ns
-    for j=2:nt
+for i=1:ns
+    for j=1:nt
 
-        minpre = min( [D(i,j-1), D(i-1,j), D(i-1,j-1)] ) ;
-        
-        if minpre == D(i,j-1)
-            mini = i;
-            minj = j-1;
-        elseif minpre == D(i-1,j)     
-            mini = i-1;
-            minj = j;
+        if(i>1 && j>1)  
+            minpre = min( [D(i,j-1), D(i-1,j), D(i-1,j-1)] ) ;
+
+            if minpre == D(i,j-1)
+                mini = i;
+                minj = j-1;
+            elseif minpre == D(i-1,j)     
+                mini = i-1;
+                minj = j;
+            else
+                mini = i-1;
+                minj = j-1;
+            end 
+
+    %         minpre = min( [C(i,j-1), C(i-1,j), C(i-1,j-1)] ) ;
+    %         
+    %         if minpre == C(i,j-1)
+    %             mini = i;
+    %             minj = j-1;
+    %         elseif minpre == C(i-1,j)     
+    %             mini = i-1;
+    %             minj = j;
+    %         else
+    %             mini = i-1;
+    %             minj = j-1;
+    %         end 
+    
+            if D(mini, minj)==inf
+                minpre = 0;
+            end
         else
-            mini = i-1;
-            minj = j-1;
-        end 
-        
-%         minpre = min( [C(i,j-1), C(i-1,j), C(i-1,j-1)] ) ;
-%         
-%         if minpre == C(i,j-1)
-%             mini = i;
-%             minj = j-1;
-%         elseif minpre == C(i-1,j)     
-%             mini = i-1;
-%             minj = j;
-%         else
-%             mini = i-1;
-%             minj = j-1;
-%         end 
-        
-        if D(mini, minj)==inf
             minpre = 0;
-%         else
-%             minpre = D(mini, minj);
-        end    
+            mini = i;
+            minj = j;
+        end           
 %         
         dtwm = (minpre + C(i,j)) / (L(mini, minj) + 1) ;
 %         dtwm = C(i,j);
@@ -98,8 +102,8 @@ OP=zeros(ns,nt); % mark all cell as zeros
 visited =zeros(ns,nt);
 mark = 100;
 
-for i=2:ns
-    for j=2:nt
+for i=1:ns
+    for j=1:nt
         if ~ isempty(R{i,j})
             si = R{i,j}(1);
             sj = R{i,j}(2);
