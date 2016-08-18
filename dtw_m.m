@@ -25,16 +25,16 @@ for i=1:ns
     for j=1:nt
 
         if(i>1 && j>1)  
-            minpre = min( [D(i,j-1), D(i-1,j), D(i-1,j-1)] ) ;
+            minpre = min( [D(i-1,j-1), D(i-1,j), D(i,j-1)] ) ;
 
-            if minpre == D(i,j-1)
-                mini = i;
+            if minpre == D(i-1,j-1)
+                mini = i-1;
                 minj = j-1;
             elseif minpre == D(i-1,j)     
                 mini = i-1;
                 minj = j;
             else
-                mini = i-1;
+                mini = i;
                 minj = j-1;
             end 
 
@@ -111,7 +111,9 @@ for i=1:ns
             if visited(si, sj)== 0
                 li = R{si,sj}(3); 
                 lj = R{si,sj}(4);
-                if  pdist2([li,lj],[si,sj]) > w
+                
+%                 if  L(li,lj) > w  % for dtw length smaller
+                if  pdist2([li,lj],[si,sj]) > w  % for diagnol length
                     OP(li, lj) = mark;
                     OP = markpath(OP, P, si, sj, li, lj, mark);
                 end    

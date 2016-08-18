@@ -242,4 +242,6 @@ b = [
 ];
 
 % % [d1, d2, d3, d4] = testall(a,b);
-[D, L, R, P, OP] = test_dtwm(a, b, 0.2, 8, 15);
+% normalised
+[D, L, R, P, OP] = test_dtwm(a, b, 0.2, 8, 20);
+% [D, L, R, P, OP] = test_dtwm(a, b, 20, 8, 20);
