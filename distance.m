@@ -15,8 +15,9 @@ for i=1:LA
 %             D(i+1,j+1)= 1;
 %         end
 %         D(i+1, j+1) = abs(A(i)-B(j))*2/abs((A(i)+B(j)));
-        D(i, j) = abs(A(i)-B(j))*2/r;
-%         D(i, j) = abs(A(i)-B(j));
+%         D(i, j) = abs(A(i)-B(j))*2/r;
+        D(i, j) = abs(A(i)-B(j));
+%           D(i, j) = sqrt((A(i)-B(j)).^2);
     end
 end
 

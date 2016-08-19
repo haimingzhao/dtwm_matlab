@@ -30,12 +30,27 @@ for i=1:ns
             if minpre == D(i-1,j-1)
                 mini = i-1;
                 minj = j-1;
+                
+                p1i = i;
+                p1j = j-1;
+                p2i = i-1;
+                p2j = j;
             elseif minpre == D(i-1,j)     
                 mini = i-1;
                 minj = j;
+                
+                p1i = i-1;
+                p1j = j-1;
+                p2i = i;
+                p2j = j-1;
             else
                 mini = i;
                 minj = j-1;
+                
+                p1i = i-1;
+                p1j = j-1;
+                p2i = i-1;
+                p2j = j;
             end 
 
     %         minpre = min( [C(i,j-1), C(i-1,j), C(i-1,j-1)] ) ;
@@ -58,22 +73,38 @@ for i=1:ns
             minpre = 0;
             mini = i;
             minj = j;
+            
+            p1i = i;
+            p1j = j;
+            p2i = i;
+            p2j = j;
         end           
 %         
         dtwm = (minpre + C(i,j)) / (L(mini, minj) + 1) ;
 %         dtwm = C(i,j);
         % avg dtw per cell if smaller than threshold, mark as match region
-        if dtwm < t  
-            D(i,j) = minpre + C(i,j); % update current cell dtw distance
-            L(i,j) = L(mini,minj) + 1; % update current cell dtw length
-            if isempty(R{mini, minj})
-                R{i, j} = [i, j, i, j]; % if previous cell not a region, then start new region
+        if dtwm < t 
+%             D(i,j) = minpre + C(i,j); % update current cell dtw distance
+            
+            
+%             if isempty(R{mini, minj})
+%             if L(mini, minj) == 0 
+            if L(mini, minj) == 0 
+                if L(p1i, p1j) == 0 && L(p2i, p2j) == 0 % make sure all around is not path
+                    D(i,j) = minpre + C(i,j); % update current cell dtw distance
+                    L(i,j) = 1; % update current cell dtw length
+                
+                    R{i, j} = [i, j, i, j]; % if previous cell not a region, then start new region
+                end    
             else
                 si = R{mini, minj}(1);
                 sj = R{mini, minj}(2);
                 
                 % if current not diverge too much from offset
                 if abs((i-si)-(j-sj)) < o
+%                  if abs((i-j)) < o
+                    D(i,j) = minpre + C(i,j); % update current cell dtw distance
+                    L(i,j) = L(mini,minj) + 1; % update current cell dtw length
                     
                     R{i, j} = [si,sj, 0,0]; % else same as previous region
                     P(i, j, 1) = mini; 
@@ -112,8 +143,8 @@ for i=1:ns
                 li = R{si,sj}(3); 
                 lj = R{si,sj}(4);
                 
-%                 if  L(li,lj) > w  % for dtw length smaller
-                if  pdist2([li,lj],[si,sj]) > w  % for diagnol length
+                if  L(li,lj) > w  % for dtw length smaller
+%                 if  pdist2([li,lj],[si,sj]) > w  % for diagnol length
                     OP(li, lj) = mark;
                     OP = markpath(OP, P, si, sj, li, lj, mark);
                 end    
