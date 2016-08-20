@@ -30,41 +30,13 @@ for i=1:ns
             if minpre == D(i-1,j-1)
                 mini = i-1;
                 minj = j-1;
-                
-                p1i = i;
-                p1j = j-1;
-                p2i = i-1;
-                p2j = j;
             elseif minpre == D(i-1,j)     
                 mini = i-1;
                 minj = j;
-                
-                p1i = i-1;
-                p1j = j-1;
-                p2i = i;
-                p2j = j-1;
             else
                 mini = i;
                 minj = j-1;
-                
-                p1i = i-1;
-                p1j = j-1;
-                p2i = i-1;
-                p2j = j;
             end 
-
-    %         minpre = min( [C(i,j-1), C(i-1,j), C(i-1,j-1)] ) ;
-    %         
-    %         if minpre == C(i,j-1)
-    %             mini = i;
-    %             minj = j-1;
-    %         elseif minpre == C(i-1,j)     
-    %             mini = i-1;
-    %             minj = j;
-    %         else
-    %             mini = i-1;
-    %             minj = j-1;
-    %         end 
     
             if D(mini, minj)==inf
                 minpre = 0;
@@ -74,50 +46,38 @@ for i=1:ns
             mini = i;
             minj = j;
             
-            p1i = i;
-            p1j = j;
-            p2i = i;
-            p2j = j;
         end           
-%         
+        
         dtwm = (minpre + C(i,j)) / (L(mini, minj) + 1) ;
-%         dtwm = C(i,j);
+
         % avg dtw per cell if smaller than threshold, mark as match region
-        if dtwm < t 
-%             D(i,j) = minpre + C(i,j); % update current cell dtw distance
-            
-            
-%             if isempty(R{mini, minj})
-%             if L(mini, minj) == 0 
-            if L(mini, minj) == 0 
-                if L(p1i, p1j) == 0 && L(p2i, p2j) == 0 % make sure all around is not path
-                    D(i,j) = minpre + C(i,j); % update current cell dtw distance
-                    L(i,j) = 1; % update current cell dtw length
+        if dtwm < t  &&  L(mini, minj) == 0 
+            D(i,j) = minpre + C(i,j); % update current cell dtw distance
+            L(i,j) = 1; % update current cell dtw length
+
+            R{i, j} = [i, j, i, j]; % if previous cell not a region, then start new region
+  
+        elseif dtwm < t
+            si = R{mini, minj}(1);
+            sj = R{mini, minj}(2);
                 
-                    R{i, j} = [i, j, i, j]; % if previous cell not a region, then start new region
-                end    
-            else
-                si = R{mini, minj}(1);
-                sj = R{mini, minj}(2);
+            % if current not diverge too much from offset
+            if abs((i-si)-(j-sj)) < o
+                D(i,j) = minpre + C(i,j); % update current cell dtw distance
+                L(i,j) = L(mini,minj) + 1; % update current cell dtw length
+
+                R{i, j} = [si,sj, 0,0]; % else same as previous region
                 
-                % if current not diverge too much from offset
-                if abs((i-si)-(j-sj)) < o
-%                  if abs((i-j)) < o
-                    D(i,j) = minpre + C(i,j); % update current cell dtw distance
-                    L(i,j) = L(mini,minj) + 1; % update current cell dtw length
-                    
-                    R{i, j} = [si,sj, 0,0]; % else same as previous region
-                    P(i, j, 1) = mini; 
-                    P(i, j, 2) = minj;  % mark path
-                    % update end cell if furthest away
-                    li = R{ si, sj }(3);
-                    lj = R{ si, sj }(4);
-                    if i > li && j > lj
-                        R{ si, sj }(3) = i;
-                        R{ si, sj }(4) = j;
-                    end
-                end    
-            end    
+                P(i, j, 1) = mini; 
+                P(i, j, 2) = minj;  % mark path
+                % update end cell if furthest away
+                li = R{ si, sj }(3);
+                lj = R{ si, sj }(4);
+                if i > li && j > lj
+                    R{ si, sj }(3) = i;
+                    R{ si, sj }(4) = j;
+                end
+            end      
         end      
     end
 end
@@ -138,10 +98,11 @@ for i=1:ns
         if ~ isempty(R{i,j})
             si = R{i,j}(1);
             sj = R{i,j}(2);
+            li = R{si,sj}(3); 
+            lj = R{si,sj}(4);
             
-            if visited(si, sj)== 0
-                li = R{si,sj}(3); 
-                lj = R{si,sj}(4);
+            if visited(li, lj)== 0
+               
                 
                 if  L(li,lj) > w  % for dtw length smaller
 %                 if  pdist2([li,lj],[si,sj]) > w  % for diagnol length
@@ -150,7 +111,6 @@ for i=1:ns
                 end    
             end
             visited(si, sj) = 1;
-%             mark = mark + 20;
         end        
     end
 end
@@ -159,12 +119,17 @@ end
 
 % subfunction to find path start from si,sj to li,lj
 function OP = markpath(OP, P, si, sj, li, lj, mark)
-    while li > si && lj > sj
-%         OP(li, lj) = mark;
-        mi = P(li, lj, 1);
-        mj = P(li, lj, 2);
-        OP(mi, mj) = mark;
-        li = mi ; lj = mj ;
+    while li > si && lj > sj && li>0 && lj >0 
+        
+        OP(li, lj) = mark;
+        li = P(li, lj, 1);
+        lj = P(li, lj, 2);
+        
+%         mi = P(li, lj, 1);
+%         mj = P(li, lj, 2);
+%         OP(mi, mj) = mark;
+%         li = mi ; lj = mj ;
+        
     end    
 end
 

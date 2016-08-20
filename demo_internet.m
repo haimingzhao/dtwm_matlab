@@ -244,4 +244,4 @@ b = [
 % % [d1, d2, d3, d4] = testall(a,b);
 % normalised
 % [D, L, R, P, OP] = test_dtwm(a, b, 0.13, 15, 20);
-[d1, d2, L, R, P, OP] = test_dtwm(a, b, 1*10^10, 15, 20);
+[d1, d2, L, R, P, OP] = test_dtwm(a, b, 1.2e10, 15, 20);
