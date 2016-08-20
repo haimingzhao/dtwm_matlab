@@ -24,7 +24,11 @@ end
 for i=1:ns
     for j=1:nt
 
-        if(i>1 && j>1)  
+        if(i==1 || j==1)
+            minpre = 0;
+            mini = i;
+            minj = j;
+        else
             minpre = min( [D(i-1,j-1), D(i-1,j), D(i,j-1)] ) ;
 
             if minpre == D(i-1,j-1)
@@ -41,10 +45,6 @@ for i=1:ns
             if D(mini, minj)==inf
                 minpre = 0;
             end
-        else
-            minpre = 0;
-            mini = i;
-            minj = j;
             
         end           
         
@@ -52,7 +52,7 @@ for i=1:ns
 
         % avg dtw per cell if smaller than threshold, mark as match region
         if dtwm < t  &&  L(mini, minj) == 0 
-            D(i,j) = minpre + C(i,j); % update current cell dtw distance
+            D(i,j) = C(i,j); % update current cell dtw distance
             L(i,j) = 1; % update current cell dtw length
 
             R{i, j} = [i, j, i, j]; % if previous cell not a region, then start new region
@@ -70,6 +70,7 @@ for i=1:ns
                 
                 P(i, j, 1) = mini; 
                 P(i, j, 2) = minj;  % mark path
+                  
                 % update end cell if furthest away
                 li = R{ si, sj }(3);
                 lj = R{ si, sj }(4);
@@ -95,22 +96,22 @@ mark = 100;
 
 for i=1:ns
     for j=1:nt
-        if ~ isempty(R{i,j})
+        if L(i,j)==1 % && R{i,j}(1)==i && R{i,j}(2)==j % if this is the start
             si = R{i,j}(1);
             sj = R{i,j}(2);
             li = R{si,sj}(3); 
             lj = R{si,sj}(4);
             
-            if visited(li, lj)== 0
+            if visited(si, sj)== 0
                
                 
                 if  L(li,lj) > w  % for dtw length smaller
 %                 if  pdist2([li,lj],[si,sj]) > w  % for diagnol length
-                    OP(li, lj) = mark;
                     OP = markpath(OP, P, si, sj, li, lj, mark);
-                end    
+                end
+                visited(si, sj) = 1;
             end
-            visited(si, sj) = 1;
+            
         end        
     end
 end
@@ -119,17 +120,13 @@ end
 
 % subfunction to find path start from si,sj to li,lj
 function OP = markpath(OP, P, si, sj, li, lj, mark)
-    while li > si && lj > sj && li>0 && lj >0 
-        
+    while li > si && lj > sj
         OP(li, lj) = mark;
-        li = P(li, lj, 1);
-        lj = P(li, lj, 2);
-        
-%         mi = P(li, lj, 1);
-%         mj = P(li, lj, 2);
+        mi = P(li, lj, 1);
+        mj = P(li, lj, 2);
 %         OP(mi, mj) = mark;
-%         li = mi ; lj = mj ;
-        
-    end    
+        li = mi ; lj = mj ;
+    end
+    OP(li, lj) = mark;
 end
 
