@@ -15,7 +15,11 @@ for i=1:ns
     for j=1:nt
         D(i, j) = inf;
     end    
-end        
+end  
+
+
+disp(size(D,1));
+disp(size(D, 2));
  
 % D(1, 1) = 0 ; % make sure the first cell start with 0 distance at D(2,2)
 
@@ -42,7 +46,7 @@ for i=1:ns
                 minj = j-1;
             end 
     
-            if D(mini, minj)==inf
+            if minpre==inf
                 minpre = 0;
             end
             
@@ -91,27 +95,18 @@ end
 function OP = find_Optimal_Paths(R, P, L, ns, nt, w)
 
 OP=zeros(ns,nt); % mark all cell as zeros
-visited =zeros(ns,nt);
 mark = 100;
 
 for i=1:ns
     for j=1:nt
         if L(i,j)==1 % && R{i,j}(1)==i && R{i,j}(2)==j % if this is the start
-            si = R{i,j}(1);
-            sj = R{i,j}(2);
-            li = R{si,sj}(3); 
-            lj = R{si,sj}(4);
-            
-            if visited(si, sj)== 0
-               
-                
-                if  L(li,lj) > w  % for dtw length smaller
-%                 if  pdist2([li,lj],[si,sj]) > w  % for diagnol length
-                    OP = markpath(OP, P, si, sj, li, lj, mark);
-                end
-                visited(si, sj) = 1;
-            end
-            
+%             si = R{i,j}(1);
+%             sj = R{i,j}(2);
+            li = R{i,j}(3); 
+            lj = R{i,j}(4);       
+            if L(li,lj) > w
+                OP = markpath(OP, P, i, j, li, lj, mark);
+            end  
         end        
     end
 end

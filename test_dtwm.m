@@ -8,7 +8,7 @@ subplot(5,6,26:29); plot(b); axis tight;
 
 subplot(5,6,[2:6, 8:12, 14:18, 20:24 ]);
 % pcolor(flipud(d3));
-imagesc(flipud(d1(2:end,2:end)));
+imagesc(flipud(d1(1:end,1:end)));
 colorbar();
 set(gca, 'YDir', 'reverse'); 
 title('Distance/Cost');
@@ -23,7 +23,7 @@ subplot(5,5,[1,6,11,16]); plot(a); axis tight; view(270,90)
 subplot(5,5,22:25); plot(b); axis tight;
 
 subplot(5,5,[2:5, 7:10, 12:15, 17:20 ]);
-imagesc(flipud(d2(2:end,2:end)));
+imagesc(flipud(d2(1:end,1:end)));
 % colorbar();
 set(gca, 'YDir', 'reverse'); 
 % title('Smith-Waterman Algorithm');
@@ -34,10 +34,22 @@ subplot(5,5,[1,6,11,16]); plot(a);axis tight; view(270,90)
 subplot(5,5,22:25); plot(b); axis tight;
 
 subplot(5,5,[2:5, 7:10, 12:15, 17:20 ]);
-OP = OP(2:end,2:end);
+OP = OP(1:end,1:end);
 imagesc(flipud(OP));
 set(gca, 'YDir', 'reverse'); 
 % title('Smith-Waterman Algorithm');
 title('DTW modified Path');
+
+figure; 
+subplot(5,5,[1,6,11,16]); plot(a);axis tight; view(270,90)
+subplot(5,5,22:25); plot(b); axis tight;
+
+subplot(5,5,[2:5, 7:10, 12:15, 17:20 ]);
+OP = OP(1:end,1:end);
+imagesc(flipud(L));
+set(gca, 'YDir', 'reverse'); 
+% title('Smith-Waterman Algorithm');
+title('DTW Length');
+
 
 end
