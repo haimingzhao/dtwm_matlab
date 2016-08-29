@@ -1,9 +1,4 @@
-% Copyright (C) 2013 Quan Wang <wangq10@rpi.edu>,
-% Signal Analysis and Machine Perception Laboratory,
-% Department of Electrical, Computer, and Systems Engineering,
-% Rensselaer Polytechnic Institute, Troy, NY 12180, USA
-
-% dynamic time warping of two signals
+% dynamic time warping 
 
 function D=dtw(s,t)
 % s: signal 1, size is ns*k, row for time, colume for channel 
